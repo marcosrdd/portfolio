@@ -16,6 +16,7 @@ gem "mini_magick"
  
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'ffaker'
 end
  
 group :development do
@@ -28,7 +29,7 @@ end
 group :test do
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
+  gem "factory_bot_rails", "~> 4.0"
 end
-
  
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
