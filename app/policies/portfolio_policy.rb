@@ -1,12 +1,11 @@
 class PortfolioPolicy < ApplicationPolicy
-    def index?
-      true
+  def index?
+    true
+  end
+
+  class Scope < Scope
+    def resolve
+      @user.portfolios
     end
-   
-   
-    class Scope < Scope
-      def resolve
-        user.portfolios
-      end
-    end
+  end
 end
