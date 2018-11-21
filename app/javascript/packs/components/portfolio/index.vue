@@ -38,6 +38,7 @@
 
           <div class="row">
             <div class="col l4 m8 s8">
+              <Tags :portfolio-id="portfolio.id" :portfolio-tags="portfolio.tags" />
             </div>
             <div class="input-field col l2 offset-m1 m4 offset-s4 s4">
               <label>
@@ -57,8 +58,10 @@
 
 const url = new URL(document.location)
 
+import Tags from './tags.vue'
+
 export default {
-  components: {  },
+  components: { Tags },
 
   data() {
     return {
