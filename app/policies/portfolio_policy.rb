@@ -5,27 +5,46 @@ class PortfolioPolicy < ApplicationPolicy
  
  
   def create?
-    record.user == user
+    permitted_action?
   end
  
- 
-  def edit?
-    record.user == user
-  end
  
   def show?
     true
   end
  
+ 
+  def edit?
+    permitted_action?
+  end
+ 
+ 
   def update?
+    edit?
+  end
+ 
+ 
+  def destroy?
+    permitted_action?
+  end
+ 
+ 
+  private
+ 
+ 
+  def permitted_action?
     record.user == user
   end
-
-  private
+ 
  
   class Scope < Scope
     def resolve
-      @user.portfolios
+      permitted_portfolios
+    end
+ 
+ 
+    def permitted_portfolios
+      user.portfolios
     end
   end
 end
