@@ -7,10 +7,12 @@
     "material-design-icons": "^3.0.1",
     "materialize-css": "^1.0.0-rc.2",
     "vue": "^2.5.17",
+    "vue-ckeditor2": "^2.1.1",
     "vue-loader": "14.2.2",
     "vue-resource": "^1.5.1",
     "vue-template-compiler": "^2.5.17",
-    "vue-turbolinks": "^2.0.3"
+    "vue-turbolinks": "^2.0.3",
+    "vuedraggable": "^2.16.0"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.4.2",
