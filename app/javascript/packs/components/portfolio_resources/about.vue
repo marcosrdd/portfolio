@@ -8,18 +8,18 @@
     </div>
   </div>
 </template>
- 
- 
+
+
 <script>
- 
+
 import VueCkeditor from 'vue-ckeditor2';
- 
+
 export default {
- 
+
   components: { VueCkeditor },
- 
+
   props: ['portfolioId'],
- 
+
   data() {
     return {
       about: { },
@@ -32,16 +32,16 @@ export default {
       }
     }
   },
- 
- 
+
+
   created(){
     this.$resource('/portfolios{/portfolioId}/abouts').get({ portfolioId: this.portfolioId })
         .then(response => { this.about = response.body.resource },
               response => { M.toast({ html: "Ocorreu um erro ao tentar carregar informações do bloco Sobre Mim", classes: "red" })
         })
   },
- 
- 
+
+
   methods: {
     submit(){
       this.$resource('/portfolios{/portfolioId}/abouts{/id}').update({ portfolioId: this.portfolioId, id: this.about.id }, { about: this.about })
@@ -51,5 +51,5 @@ export default {
     }
   }
 }
- 
+
 </script>

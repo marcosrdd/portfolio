@@ -5,33 +5,33 @@
         <div class="col s12">
           <h5 class="custom-grey-text page-title">Cards do Portfolio</h5>
         </div>
- 
+
         <div class="col l4 m4 s12">
           <draggable v-model="leftBlocks" @end="updateBlocks(leftBlocks)">
             <div v-for="block in leftBlocks" :key="block.id" class="card-panel">
               <a class="fa fa-times grey-text right" @click="removeBlock(block)"></a>
               <component :is="block.kind" :portfolioId="portfolioId" :blockId="block.id"></component>
             </div>
-            
-            <div class="card-panel center">
-              <img src="/assets/add_portfolio.png" id="add-left-block" @click="openModalToAdd('left')" />
-            </div>
           </draggable>
+            
+          <div class="card-panel center">
+            <img src="/assets/add_portfolio.png" id="add-left-block" @click="openModalToAdd('left')" />
+          </div>
         </div>
- 
+
         <div class="col l8 m8 s12">
           <draggable v-model="rightBlocks" @end="updateBlocks(rightBlocks)">
             <div v-for="block in rightBlocks" :key="block.id" class="card-panel">
               <a class="fa fa-times grey-text right" @click="removeBlock(block)"></a>
               <component :is="block.kind" :portfolioId="portfolioId" :blockId="block.id"></component>
             </div>
-            
-            <div class="card-panel center">
-              <img src="/assets/add_portfolio.png" id="add-right-block" @click="openModalToAdd('right')" />
-            </div>
           </draggable>
+          
+          <div class="card-panel center">
+            <img src="/assets/add_portfolio.png" id="add-right-block" @click="openModalToAdd('right')" />
+          </div>
         </div>
- 
+
         <div id="add-block-modal" class="modal">
           <div class="modal-content">
             <h4>Adicionar Novo Bloco</h4>
@@ -53,11 +53,9 @@
     </div>
   </div>
 </template>
- 
- 
+
+
 <script>
-  import draggable from 'vuedraggable'
- 
   import Profile from '../portfolio_resources/profile'
   import Education from '../portfolio_resources/education'
   import AdditionalInformation from '../portfolio_resources/additional_information'
@@ -68,11 +66,11 @@
   import Language from '../portfolio_resources/language'
   import Skill from '../portfolio_resources/skill'
   import Social from '../portfolio_resources/social'
-  import ContactForm from '../portfolio_resources/contact_form'  
- 
+  import ContactForm from '../portfolio_resources/contact_form'
+  import draggable from 'vuedraggable'
+
   export default {
       components: {
-        draggable,
         Profile,
         Education,
         'additional_information': AdditionalInformation,
@@ -83,7 +81,8 @@
         Hobby,
         Language,
         Skill,
-        Social
+        Social,
+        draggable
     },
     data() {
       return {
@@ -111,18 +110,18 @@
         }
       }
     },
- 
+
     watch: {
       blocks() {
         this.leftBlocks = this.blocks.filter((block) => { return block.side == "left" })
         this.rightBlocks = this.blocks.filter((block) => { return block.side == "right" })
       }
     },
- 
+
     created() {
       this.portfolioId = $("#portfolio-edit").data("portfolio");
     },
- 
+
     mounted(){
       let modal_element = document.getElementById("add-block-modal");
       this.modalInstance = M.Modal.init(modal_element);
@@ -131,21 +130,25 @@
                 response => { M.toast({ html: "Error on trying to get Blocks", classes: "red" })
           })
     },
- 
+
     methods: {
+        updateBlocks(blocks){
+        let blocksToUpdate = blocks.map((block, index) => { return { id: block.id, position: index } })
+        this.$http.patch(`/portfolios/${this.portfolioId}/blocks/positions`, { blocks: blocksToUpdate })
+          .then(
+            response => {},
+            response => {
+              if(response.body.old_blocks)
+                this.blocks = response.body.old_blocks
+              M.toast({ html: "Ocorreu um erro ao atualizar as posições dos blocos", classes: "red" })
+            })
+      },
       openModalToAdd(side) {
         this.blockToAdd.side = side
         this.blockKinds = this[`${side}Kinds`]
         this.modalInstance.open();
       },
-      updateBlocks(blocks){
-        let blocksToUpdate = blocks.map((block, index) => { return { id: block.id, position: index } })
-        this.$http.patch(`/portfolios/${this.portfolioId}/blocks/positions`, { blocks: blocksToUpdate })
-            .then(response => {}, response => {
-              if(response.body.old_blocks) this.blocks = response.body.old_blocks
-              M.toast({ html: "Ocorreu um erro ao atualizar as posições dos blocos", classes: "red" })
-            })
-      },
+
       addBlock() {
         this.$resource('/portfolios{/portfolioId}/blocks').save({ portfolioId: this.portfolioId }, { block: this.blockToAdd })
             .then(response => {
@@ -156,7 +159,7 @@
               response.body.errors.forEach(error => { M.toast({ html: error, classes: "red" }) })
             })
       },
- 
+
       removeBlock(blockToRemove){
         this.$resource('/portfolios{/portfolioId}/blocks{/id}').remove({ portfolioId: blockToRemove.portfolio_id, id: blockToRemove.id })
             .then(response => {
@@ -168,5 +171,5 @@
       }
     }
   }
- 
+
 </script>

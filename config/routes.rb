@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   root 'pages#home'
   devise_for :users
- 
+
   resources :portfolios, except: :new do
     resources :tags, only: [:create, :destroy], param: :tag_id, controller: :portfolio_tags
     resources :blocks, only: [:index, :create, :destroy] do
@@ -18,6 +18,6 @@ Rails.application.routes.draw do
     resources :socials, only: [:index, :create, :destroy]
     resources :abouts, only: [:index, :update]
   end
- 
+
   resources :tags, only: :index
 end
